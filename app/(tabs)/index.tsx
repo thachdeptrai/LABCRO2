@@ -1,74 +1,92 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Header Custom Component
+interface HeaderProps {
+  renderLeft?: () => JSX.Element;
+  renderCenter?: () => JSX.Element;
+  renderRight?: () => JSX.Element;
+}
+
+const Header: React.FC<HeaderProps> = ({ renderLeft, renderCenter, renderRight }) => {
+  return (
+    <View style={headerStyles.header}>
+      <View style={headerStyles.side}>{renderLeft && renderLeft()}</View>
+      <View style={headerStyles.center}>{renderCenter && renderCenter()}</View>
+      <View style={headerStyles.side}>{renderRight && renderRight()}</View>
+    </View>
+  );
+};
+
+const headerStyles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 5,
+    backgroundColor: '#fff',
+    width: '100%',
+  
+    elevation: 2, 
+  },
+  side: { flex: 1, alignItems: 'center' },
+  center: { flex: 3, alignItems: 'center' },
+  backButton: { padding: 10 },
+  userImage: { width: 30, height: 30, borderRadius: 15 },
+});
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Header
+          renderLeft={() => (
+            <TouchableOpacity style={headerStyles.backButton} onPress={() => console.log('Back pressed')}>
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </TouchableOpacity>
+          )}
+          renderCenter={() => <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Header</Text>}
+          renderRight={() => (
+            <Image
+              source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNRTo4qMo0OdXW6Ni8yg1zXYWOnSry6YkxWA&s" }} 
+              style={headerStyles.userImage}
+            />
+          )}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </View>
+      {/* <View style={styles.container1}>
+        <Header
+          renderLeft={() => (
+            <TouchableOpacity style={headerStyles.backButton} onPress={() => console.log('Back pressed')}>
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </TouchableOpacity>
+          )}
+          renderCenter={() => <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Trang Chủ</Text>}
+          
+        />
+      </View>
+      <View style={styles.container1}>
+        <Header
+          renderLeft={() => (
+            <TouchableOpacity style={headerStyles.backButton} onPress={() => console.log('Back pressed')}>
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </TouchableOpacity>
+          )}
+         
+        />
+      </View> */}
+    </SafeAreaView>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+   marginTop: 50,
+  },
+  container1: {
     alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    justifyContent: 'center',
+   },
 });
