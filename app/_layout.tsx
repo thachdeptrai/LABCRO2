@@ -1,49 +1,39 @@
-import { SafeAreaView, StyleSheet, Text, View, ScrollView } from 'react-native';
-import React from 'react';
-import Header from './comps/Header';
-import SectionView from './comps/SectionView';
-import B3 from './(tabs)/B3';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import 'react-native-reanimated';
 
-const Bai1 = () => {
+import { useColorScheme } from '@/hooks/useColorScheme';
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const colorScheme = useColorScheme();
+  const [loaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
-    <View>
-      <Header renderLeft={null} title={"Trang chủ"} renderRight={null} />
-    </View>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="auto" />
+    </ThemeProvider>
   );
-};
-
-const Bai2 = () => {
-  return (
-    <View style={{ flex: 1 }}>
-      <SectionView />
-    </View>
-  );
-};
-
-const Bai3 = () => {
-  return (
-    <View style={{ flex: 1 }}>
-      <B3 />
-    </View>
-  );
-};
-
-const App = () => {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Bai1 />
-        <Bai2 />
-        <Bai3 />
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-export default App;
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 10, // Optional padding for better layout
-  },
-});
+}
